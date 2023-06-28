@@ -29,12 +29,16 @@ def main(args=None):
     while not imu.connected and rclpy.ok():
         node.log_info("The Qwiic ICM20948 device isn't connected to the system. Please check your connection")
 
+    imu.begin()
+
     imu_msg = sensor_msgs.msg.Imu()
     mag_msg = sensor_msgs.msg.MagneticField()
     rate = node.create_rate(100)
     while rclpy.ok():
         if imu.dataReady():
+            imu.getAgmt()
             imu_msg.header.stamp = node.get_clock().now().to_msg()
+            imu_msg.header.frame_id = "imu"
             imu_msg.linear_acceleration.x = imu.axRaw
             imu_msg.linear_acceleration.y = imu.ayRaw
             imu_msg.linear_acceleration.z = imu.azRaw
@@ -45,6 +49,7 @@ def main(args=None):
             node.publish_imu(imu_msg)
 
             mag_msg.header.stamp = imu_msg.header.stamp
+            mag_msg.header.frame_id = "imu"
             mag_msg.magnetic_field.x = imu.mxRaw
             mag_msg.magnetic_field.y = imu.myRaw
             mag_msg.magnetic_field.z = imu.mzRaw
