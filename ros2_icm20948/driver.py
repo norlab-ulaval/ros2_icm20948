@@ -43,7 +43,7 @@ def main(args=None):
         if imu.dataReady():
             imu.getAgmt()
             imu_msg.header.stamp = node.get_clock().now().to_msg()
-            imu_msg.header.frame_id = "imu"
+            imu_msg.header.frame_id = "icm20948"
             imu_msg.linear_acceleration.x = imu.axRaw * 9.81 / 2048.0
             imu_msg.linear_acceleration.y = imu.ayRaw * 9.81 / 2048.0
             imu_msg.linear_acceleration.z = imu.azRaw * 9.81 / 2048.0
