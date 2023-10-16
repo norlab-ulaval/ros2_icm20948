@@ -50,7 +50,7 @@ class ICM20948Node(Node):
             try:
                 self.imu.getAgmt()
             except Exception as e:
-                print(e)
+                self.logger.info(str(e))
 
             imu_msg.header.stamp = self.get_clock().now().to_msg()
             imu_msg.header.frame_id = "icm20948"
