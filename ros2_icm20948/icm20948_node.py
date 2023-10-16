@@ -22,7 +22,7 @@ class ICM20948Node(Node):
         frame_id = self.get_parameter("frame_id").get_parameter_value().string_value
         self.frame_id = frame_id
 
-        self.declare_parameter("pub_rate", 100)
+        self.declare_parameter("pub_rate", 50)
         pub_rate = self.get_parameter("pub_rate").get_parameter_value().integer_value
         self.pub_rate = pub_rate
 
@@ -38,12 +38,10 @@ class ICM20948Node(Node):
 
         # Publishers
         self.imu_pub_ = self.create_publisher(sensor_msgs.msg.Imu, "/imu/data_raw", 10)
-        self.pub_clk_ = self.create_timer(1 / self.imu_rate, self.publish_cback)
-
         self.mag_pub_ = self.create_publisher(
             sensor_msgs.msg.MagneticField, "/imu/mag_raw", 10
         )
-        self.mag_clk_ = self.create_timer(1 / self.mag_rate, self.publish_mag_cback)
+        self.pub_clk_ = self.create_timer(1 / self.pub_rate, self.publish_cback)
 
     def publish_cback(self):
         imu_msg = sensor_msgs.msg.Imu()
