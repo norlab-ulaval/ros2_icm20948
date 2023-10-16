@@ -53,7 +53,7 @@ class ICM20948Node(Node):
                 self.logger.info(str(e))
 
             imu_msg.header.stamp = self.get_clock().now().to_msg()
-            imu_msg.header.frame_id = "icm20948"
+            imu_msg.header.frame_id = self.frame_id
             imu_msg.linear_acceleration.x = self.imu.axRaw * 9.81 / 2048.0
             imu_msg.linear_acceleration.y = self.imu.ayRaw * 9.81 / 2048.0
             imu_msg.linear_acceleration.z = self.imu.azRaw * 9.81 / 2048.0
@@ -63,7 +63,7 @@ class ICM20948Node(Node):
             imu_msg.orientation_covariance[0] = -1
 
             mag_msg.header.stamp = imu_msg.header.stamp
-            mag_msg.header.frame_id = "imu"
+            mag_msg.header.frame_id = self.frame_id
             mag_msg.magnetic_field.x = self.imu.mxRaw * 1e-6 / 0.15
             mag_msg.magnetic_field.y = self.imu.myRaw * 1e-6 / 0.15
             mag_msg.magnetic_field.z = self.imu.mzRaw * 1e-6 / 0.15
