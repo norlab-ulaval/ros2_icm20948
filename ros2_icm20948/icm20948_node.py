@@ -1,17 +1,22 @@
-import rclpy
-from rclpy.node import Node
-import sensor_msgs.msg
+import math
+from time import sleep
+
 import geometry_msgs.msg
 import qwiic_icm20948
-import math
+import rclpy
+import sensor_msgs.msg
+from rclpy.node import Node
 
-from time import sleep
 
 class DriverNode(Node):
     def __init__(self):
-        super().__init__('driver_node')
-        self.imu_publisher = self.create_publisher(sensor_msgs.msg.Imu, '/imu/data_raw', 10)
-        self.mag_publisher = self.create_publisher(sensor_msgs.msg.MagneticField, '/imu/mag_raw', 10)
+        super().__init__("driver_node")
+        self.imu_publisher = self.create_publisher(
+            sensor_msgs.msg.Imu, "/imu/data_raw", 10
+        )
+        self.mag_publisher = self.create_publisher(
+            sensor_msgs.msg.MagneticField, "/imu/mag_raw", 10
+        )
 
     def log_info(self, message):
         self.get_logger().info(message)
@@ -29,13 +34,15 @@ def main(args=None):
 
     imu = qwiic_icm20948.QwiicIcm20948()
     while not imu.connected and rclpy.ok():
-        node.log_info("The Qwiic ICM20948 device isn't connected to the system. Please check your connection")
-    
+        node.log_info(
+            "The Qwiic ICM20948 device isn't connected to the system. Please check your connection"
+        )
+
     imu.begin()
 
     imu.setFullScaleRangeGyro(qwiic_icm20948.dps2000)
     imu.setFullScaleRangeAccel(qwiic_icm20948.gpm16)
-    
+
     imu_msg = sensor_msgs.msg.Imu()
     mag_msg = sensor_msgs.msg.MagneticField()
     rate = node.create_rate(100)
